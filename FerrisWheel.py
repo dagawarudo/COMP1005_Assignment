@@ -21,24 +21,23 @@ class FerrisWheel():
 
         self.cubicles_list = []
 #TODO IMPROVE THE COORDINATES
-        x = self.xpos + self.width
-        y = self.ypos + self.height
+        self.x = self.xpos + self.width
+        self.y = self.ypos + self.height
+        
+        # Coordinates for the wheel/circle
+        self.center_x = (self.x + self.xpos)/2
+        self.center_y = (self.y + self.ypos)/2
 
-        center_x = (x+self.xpos)/2
-        center_y = (y+self.ypos)/2
-        radius = (x - center_x)
-
-        self.center_x =center_x
-        self.center_y = center_y
+        self.radius = (self.x - self.center_x) #Radius 
 
         cubicle_size = 4
         color_list = ["red","blue","yellow", "green","orange"]
 
-        for i  in range(self.cubicles):
-            cubicle_angle = 2 *np.pi *i/cubicles
+        for i  in range(self.cubicles): # To plot each cubicle in thr wheel
+            cubicle_angle = 2 *np.pi *i/cubicles #To divide the cubicles evenly in the wheel
 
-            cubicle_x = center_x + radius *np.cos(cubicle_angle)
-            cubicle_y = center_y + radius * np.sin(cubicle_angle)
+            cubicle_x = self.center_x + self.radius *np.cos(cubicle_angle)
+            cubicle_y = self.center_y + self.radius * np.sin(cubicle_angle)
 
             cubicle_color = random.choice(color_list)
 
@@ -47,18 +46,12 @@ class FerrisWheel():
             self.cubicles_list.append(cubicle)
 
         
-    def plot_me(self, p):
-        x = self.xpos + self.width
-        y = self.ypos + self.height
-
-        center_x = (x+self.xpos)/2
-        center_y = (y+self.ypos)/2
-        radius = (x - center_x)  
+    def plot_me(self, p):  
 
          #plotting the figure
-        p.plot([self.xpos, x, x, self.xpos, self.xpos],[self.ypos, self.ypos,y, y,self.ypos]) # box
+        p.plot([self.xpos, self.x, self.x, self.xpos, self.xpos],[self.ypos, self.ypos,self.y, self.y,self.ypos]) # box
         p.plot(self.transform_frame_x, self.transform_frame_y, self.frame_color) #frame
-        circle = p.Circle((center_x, center_y), radius, color="black", fill=False,linewidth = 3)
+        circle = p.Circle((self.center_x, self.center_y), self.radius, color="black", fill=False,linewidth = 3) # Wheel
         ax = p.gca()
         ax.add_patch(circle)
 
@@ -71,7 +64,7 @@ class FerrisWheel():
             cubicle_size = cubicle.size
             cubicle_color = cubicle.color
             p.plot(cubicle_x, cubicle_y,"s",color = cubicle_color,markersize = cubicle_size)
-            p.plot([center_x,cubicle_x],[center_y,cubicle_y],color = "black")
+            p.plot([self.center_x,cubicle_x],[self.center_y,cubicle_y],color = "black")
 
     def step_changes(self):
         
