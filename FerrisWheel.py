@@ -31,7 +31,7 @@ class FerrisWheel():
         self.center_x =center_x
         self.center_y = center_y
 
-        cubicle_size = 5
+        cubicle_size = 4
         color_list = ["red","blue","yellow", "green","orange"]
 
         for i  in range(self.cubicles):
@@ -40,11 +40,9 @@ class FerrisWheel():
             cubicle_x = center_x + radius *np.cos(cubicle_angle)
             cubicle_y = center_y + radius * np.sin(cubicle_angle)
 
-            cubicle_xend = cubicle_x - cubicle_size/2
-            cubicle_yend = cubicle_y - cubicle_size/2
             cubicle_color = random.choice(color_list)
 
-            cubicle = Cubicle(cubicle_xend, cubicle_yend,cubicle_angle,cubicle_size,cubicle_color)
+            cubicle = Cubicle(cubicle_x, cubicle_y,cubicle_angle,cubicle_size,cubicle_color)
 
             self.cubicles_list.append(cubicle)
 
@@ -72,8 +70,7 @@ class FerrisWheel():
             cubicle_y = cubicle.transform_y
             cubicle_size = cubicle.size
             cubicle_color = cubicle.color
-            cubicle_plot = p.Rectangle((cubicle_x,cubicle_y),cubicle_size,cubicle_size,color = cubicle_color)
-            ax.add_patch(cubicle_plot)
+            cubicle_plot = p.plot(cubicle_x, cubicle_y,"o",color = cubicle_color,markersize = cubicle_size)
 
     def step_changes(self):
         
@@ -100,10 +97,7 @@ class FerrisWheel():
             cubicle.transform_x = rotated_cubicle[0] + a
             cubicle.transform_y = rotated_cubicle[1] + b 
 
-            cubicle.angle += 15
-
-            if cubicle.angle >= 360:
-                cubicle.angle -= 360 
+            cubicle.angle += 15 
 
 
 
