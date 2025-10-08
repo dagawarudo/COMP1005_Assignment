@@ -70,7 +70,7 @@ class FerrisWheel():
             cubicle_y = cubicle.transform_y
             cubicle_size = cubicle.size
             cubicle_color = cubicle.color
-            cubicle_plot = p.plot(cubicle_x, cubicle_y,"s",color = cubicle_color,markersize = cubicle_size)
+            cubicle_plot = p.plot(cubicle_x, cubicle_y,"o",color = cubicle_color,markersize = cubicle_size)
 
     def step_changes(self):
         
@@ -98,11 +98,3 @@ class FerrisWheel():
             cubicle.transform_y = rotated_cubicle[1] + b 
 
             cubicle.angle += 15 
-
-
-
-
-
-
-
-
