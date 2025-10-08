@@ -1,5 +1,4 @@
 import numpy as np
-from Cubicle import Cubicle
 class HotAirBalloon():
     def __init__(self,xpos,ypos,width,height,balloon_color, frame_color):
         self.xpos = xpos
@@ -21,17 +20,19 @@ class HotAirBalloon():
         x_mid = self.xpos + self.width/2
         y_mid = self.ypos + self.height/4
 
+        self.radius = self.height/8
+
 
         self.cubicle_x = np.array([x_mid-x_mid*0.05,x_mid+x_mid*0.05,x_mid+x_mid*0.05,x_mid-x_mid*0.05,x_mid-x_mid*0.05])
         self.cubicle_y = np.array([self.ypos,self.ypos,y_mid,y_mid,self.ypos])
 
         self.rope_x = np.array([x_mid, x_mid])
-        self.rope_y = np.array([y_mid, y_mid+self.height/4])
+        self.rope_y = np.array([y_mid, y_mid + self.radius])
   
         self.center_x = x_mid
-        self.center_y = y_mid+self.height/4
+        self.center_y = y_mid + 2 * self.radius
 
-        self.radius = self.height/8
+    
          
 
 

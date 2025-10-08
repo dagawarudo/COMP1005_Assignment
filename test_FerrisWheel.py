@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from FerrisWheel import FerrisWheel
 
 wheel1 = FerrisWheel(40,40, 20, 20,5,"purple","black")
-wheel2 = FerrisWheel(90,10,40,40,8,"green","blue")
-wheel3 = FerrisWheel(140,75,75,75,3,"red","gold")
+wheel2 = FerrisWheel(90,10,40,40,3,"green","blue")
+wheel3 = FerrisWheel(140,75,75,75,8,"red","gold")
 
 wheel_list = [wheel1,wheel2,wheel3]
 

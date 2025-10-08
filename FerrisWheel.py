@@ -70,7 +70,8 @@ class FerrisWheel():
             cubicle_y = cubicle.transform_y
             cubicle_size = cubicle.size
             cubicle_color = cubicle.color
-            cubicle_plot = p.plot(cubicle_x, cubicle_y,"s",color = cubicle_color,markersize = cubicle_size)
+            p.plot(cubicle_x, cubicle_y,"s",color = cubicle_color,markersize = cubicle_size)
+            p.plot([center_x,cubicle_x],[center_y,cubicle_y],color = "black")
 
     def step_changes(self):
         
