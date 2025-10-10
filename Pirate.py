@@ -1,8 +1,8 @@
+import numpy as np
 class Pirate(): 
     """Class to represent Pirate rides in showground"""
 
-    def __init__(self, xpos, ypos,width, height, ship_color="red", frame_color="black"):
-        import numpy as np 
+    def __init__(self, xpos, ypos,width, height, ship_color="red", frame_color="black"): 
         self.xpos = xpos
         self.ypos = ypos
         self.width = width
@@ -47,8 +47,7 @@ class Pirate():
 
 
 
-    def step_change(self):
-        import numpy as np
+    def step_changes(self):
 
         
         #getting the angle in radians 
