@@ -10,7 +10,7 @@ class Ride():
 
     def is_collides(self, x,y):
         # Compares the coordinates of an object and rides and checks if the object would be inside the ride 
-        return (self.xpos <= x <= self.xpos + self.width) and (self.ypos <= y <= self.ypos + self.height)
+        return (self.xpos < x < self.xpos + self.width) and (self.ypos < y < self.ypos + self.height)
 
     def insert_ride(self, person):
         if self.ride_full():
@@ -27,7 +27,7 @@ class Ride():
     def remove_queue(self, person):
         self.queue.remove(person)
     def get_target(self):
-        return self.xpos,self.ypos
+        return self.xpos-2,self.ypos-2
     def get_exit(self):
         return self.xpos + self.width, self.ypos + self.height
 

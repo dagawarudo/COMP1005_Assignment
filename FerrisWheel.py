@@ -3,9 +3,8 @@ from Ride import Ride
 import numpy as np
 import random
 class FerrisWheel(Ride):
-    def __init__(self, xpos, ypos,width, height,cubicles ,cubicle_color="red", frame_color="black"):
+    def __init__(self, xpos, ypos,width, height,cubicles , frame_color="black"):
         super().__init__(xpos,ypos,width,height)
-        self.cubicle_color = cubicle_color
         self.frame_color = frame_color
         self.cubicles = cubicles
 
@@ -46,7 +45,7 @@ class FerrisWheel(Ride):
         
     def plot_me(self, p):  
 
-         #plotting the figure
+        #plotting the figure
         p.plot([self.xpos, self.x, self.x, self.xpos, self.xpos],[self.ypos, self.ypos,self.y, self.y,self.ypos]) # box
         p.plot(self.transform_frame_x, self.transform_frame_y, self.frame_color) #frame
         circle = p.Circle((self.center_x, self.center_y), self.radius, color="black", fill=False,linewidth = 3) # Wheel

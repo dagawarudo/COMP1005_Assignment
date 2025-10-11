@@ -1,34 +1,37 @@
 import random
 import math
 class Person():
-    def __init__(self,xpos,ypos,color):
+    def __init__(self,xpos,ypos,color,size = 10,step_size = 1):
         self.xpos = xpos
         self.ypos = ypos
         self.color = color
-        self.destination = False
-        self.ride_choice = None  
+        self.size =size
+        self.step_size = step_size
+        self.ride_choice = None
+        self.destination = False  
 
-    def step_change(self, ride_list = [], step_size = 1):
+    def step_change(self, ride_list = []):
+        #TODO Improve the collissions 
         #Source/Inspiration for unit vectors calculations : https://www.wikihow.com/Normalize-a-Vector
         ride_x, ride_y = self.ride_choice.get_target()
         change_x = ride_x - self.xpos
         change_y = ride_y - self.ypos
         distance = math.sqrt(change_x**2 +change_y**2) # Distance from ride to person 
 
-        if distance <= 5:
+        if distance <= 10:
             # If the person reaches the ride 
             self.reached_destination()
         #To get the unit vector 
         x = change_x/distance
         y = change_y/distance
 
-        new_x = self.xpos + x * step_size
-        new_y = self.ypos + y * step_size
+        new_x = self.xpos + x * self.step_size
+        new_y = self.ypos + y * self.step_size
 
         for ride in ride_list:
             if ride.is_collides(new_x, new_y):
                 y *= -1
-                new_y = self.ypos + y * step_size
+                new_y = self.ypos + y * self.step_size
                 new_x = self.xpos 
         self.xpos = new_x
         self.ypos = new_y
@@ -45,7 +48,7 @@ class Person():
 
     def plot_me(self,p):
         #Plot the person
-        p.plot(self.xpos, self.ypos, "o", color = self.color, markersize=10)
+        p.plot(self.xpos, self.ypos, "o", color = self.color, markersize= self.size)
 
     def insert_ride(self, ride):
         #Insert the target/ride 

@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from FerrisWheel import FerrisWheel
 from Pirate import Pirate
 wheel1 = Pirate(40,40, 20, 20,"purple","black")
-wheel2 = FerrisWheel(90,10,40,40,3,"green","blue")
-wheel3 = FerrisWheel(140,75,75,75,8,"red","gold")
+wheel2 = FerrisWheel(90,10,40,40,3,"blue")
+wheel3 = FerrisWheel(140,75,75,75,8,"gold")
 
 wheel_list = [wheel1,wheel2,wheel3]
 
