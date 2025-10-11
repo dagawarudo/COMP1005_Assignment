@@ -23,6 +23,7 @@ random.seed(10)
 plt.ion()
 plt.title("Showground")
 
+plt.gca().set_facecolor('lightgreen') 
 for t in range(50):
     for i in wheel_list :
         i.plot_me(plt)
@@ -33,7 +34,7 @@ for t in range(50):
             choice = random.choice(wheel_list)
             p.insert_ride(choice)
         if p.get_destination() == True :
-            p.step_change(wheel_list,5)
+            p.step_change(wheel_list,10)
     plt.xlim(0,300)
     plt.ylim(0,300)
     plt.title("Showground - Task 3")
