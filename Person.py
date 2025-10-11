@@ -5,15 +5,17 @@ class Person():
         self.xpos = xpos
         self.ypos = ypos
         self.color = color
-        self.destination = False 
+        self.destination = False
+        self.ride_choice = None  
 
-    def step_change(self, ride_x, ride_y, ride_list = [], step_size = 1):
+    def step_change(self, ride_list = [], step_size = 1):
         #Source/Inspiration for unit vectors calculations : https://www.wikihow.com/Normalize-a-Vector
+        ride_x, ride_y = self.ride_choice.get_target()
         change_x = ride_x - self.xpos
         change_y = ride_y - self.ypos
-        distance = math.sqrt(x**2 +y**2) # Distance from ride to person 
+        distance = math.sqrt(change_x**2 +change_y**2) # Distance from ride to person 
 
-        if distance == 0:
+        if distance <= 2:
             # If the person reaches the ride 
             self.reached_destination()
         #To get the unit vector 
@@ -24,17 +26,33 @@ class Person():
         new_y = self.ypos + y * step_size
 
         for ride in ride_list:
-            if ride.is_collides():
+            if ride.is_collides(new_x, new_y):
                 y *= -1
                 new_y = self.ypos + y * step_size
         self.xpos = new_x
         self.ypos = new_y
-    def reached_destination(self):
+
+    def go_destination(self):
+        #Person is going towards the target/ride 
         self.destination = True 
     def get_destination(self):
         return self.destination
-    def left_destination(self):
+    
+    def reached_destination(self):
+        #Person is no longer going towards the target/ride 
         self.destination = False
+
+    def plot_me(self,p):
+        #Plot the person
+        p.plot(self.xpos, self.ypos, "o", color = self.color, markersize=10)
+
+    def insert_ride(self, ride):
+        #Insert the target/ride 
+        self.ride_choice = ride
+        self.go_destination()
+    def no_target(self):
+        return self.ride_choice is None 
+    
         
 
 

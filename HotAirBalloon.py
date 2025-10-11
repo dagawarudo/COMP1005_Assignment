@@ -1,10 +1,8 @@
+from Ride import Ride
 import numpy as np
-class HotAirBalloon():
+class HotAirBalloon(Ride):
     def __init__(self,xpos,ypos,width,height,balloon_color, frame_color):
-        self.xpos = xpos
-        self.ypos = ypos
-        self.width = width 
-        self.height = height
+        super().__init__(xpos,ypos,width,height)
         self.balloon_color = balloon_color
         self.frame_color = frame_color
         self.forward = True

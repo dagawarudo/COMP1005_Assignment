@@ -1,12 +1,10 @@
 from Cubicle import Cubicle
+from Ride import Ride
 import numpy as np
 import random
-class FerrisWheel():
+class FerrisWheel(Ride):
     def __init__(self, xpos, ypos,width, height,cubicles ,cubicle_color="red", frame_color="black"):
-        self.xpos = xpos
-        self.ypos = ypos
-        self.width = width
-        self.height = height
+        super().__init__(xpos,ypos,width,height)
         self.cubicle_color = cubicle_color
         self.frame_color = frame_color
         self.cubicles = cubicles

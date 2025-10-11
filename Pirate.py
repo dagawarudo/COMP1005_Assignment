@@ -1,12 +1,10 @@
+from Ride import Ride 
 import numpy as np
-class Pirate(): 
+class Pirate(Ride): 
     """Class to represent Pirate rides in showground"""
 
-    def __init__(self, xpos, ypos,width, height, ship_color="red", frame_color="black"): 
-        self.xpos = xpos
-        self.ypos = ypos
-        self.width = width
-        self.height = height
+    def __init__(self, xpos, ypos,width, height, ship_color="red", frame_color="black"):
+        super().__init__(xpos,ypos,width,height) 
         self.ship_color = ship_color
         self.frame_color = frame_color
 
@@ -89,13 +87,13 @@ class Pirate():
 
         # If the boat is moving forward 
         if self.forward == True:
-            self.angle += 45
+            self.angle += 30
             if self.angle >= 90: # when the angle exceeds 90 degree,  the boat would go backwards 
                 self.forward = False  
         # If the boat is going backwards 
         else:
-            self.angle -= 45
-            if self.angle == -90: # once it reaches -90 degrees make it go forwaerd
+            self.angle -= 30
+            if self.angle == -90: # once it reaches -90 degrees make it go forward
                 self.forward = True 
 
             

@@ -7,8 +7,9 @@
 #
 import matplotlib.pyplot as plt
 from Pirate  import Pirate
-from HotAirBalloon import HotAirBalloon as balloon
-from FerrisWheel import FerrisWheel as wheel
+from HotAirBalloon import HotAirBalloon as Balloon
+from FerrisWheel import FerrisWheel as Wheel
+from Person import Person
 
 def main() :
     plot_area()
