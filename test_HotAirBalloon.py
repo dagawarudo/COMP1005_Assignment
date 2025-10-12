@@ -19,7 +19,7 @@ plt.title("Showground")
 for t in range(30):
     for i in wheel_list :
         i.plot_me(plt)
-        i.step_change()
+        i.step_changes()
     plt.xlim(0,300)
     plt.ylim(0,300)
     plt.title("Showground - Task 3")

@@ -96,14 +96,47 @@ def interactive_mode():
 
 
     plt.ion()
-    for i in range(100):
+    for i in range(1000):
         plot_area(i)
         for ride in ride_list:
             ride.plot_me(plt)
+            if ride.ride_full() and ride.is_animated() == False:
+                ride_max = ride.get_limit()
+                for _ in range(ride_max):
+                    patron = ride.remove_queue()
+                    ride.insert_person(patron)
+                ride.set_animated(True)
+            if ride.is_animated() ==  True:
+                ride_count = ride.get_count()
+                ride.step_changes()
+                if ride_count < 10:
+                    ride.plot_me(plt)
+                    ride_count += 1
+                    ride.set_count(ride_count)
+                
+                else:
+                    ride_count = 0
+                    ride.set_count(ride_count)
+                    ride.set_animated(False)
+                    ride_max = ride.get_limit()
+                    for _ in range(ride_max):
+                        passenger = ride.remove_passenger()
+                        ride_choice = random.choice(ride_list)
+                        passenger.insert_ride(ride_choice)
+                        patron_list.append(passenger)
+                    
+            ride_queue = ride.get_queue()    
+            for patrons in ride_queue:
+                patrons.plot_me(plt)
         for person in patron_list:
             person.plot_me(plt)
             if person.get_destination():
                 person.step_change(ride_list)
+            if person.get_destination() == False:
+                person_ride = person.get_ride()
+                person_ride.insert_queue(person)
+                patron_list.remove(person)
+
         print(f"{i} th attempt ")
         plt.pause(0.005)
     plt.ioff()
@@ -118,7 +151,7 @@ def plot_area(i):
     plt.ylim(0,300)
     plt.title("Showground")
     if i >= 5:
-        plt.gca().set_facecolor('lightyellow') 
+        plt.gca().set_facecolor('lightgreen') 
     else:
         plt.gca().set_facecolor("lightgreen")
     plt.pause(0.25)

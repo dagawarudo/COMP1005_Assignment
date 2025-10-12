@@ -56,6 +56,8 @@ class Person():
         self.go_destination()
     def no_target(self):
         return self.ride_choice is None 
+    def get_ride(self):
+        return self.ride_choice
     
         
 

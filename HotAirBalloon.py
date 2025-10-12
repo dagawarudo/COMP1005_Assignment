@@ -46,7 +46,7 @@ class HotAirBalloon(Ride):
 
         # SOURCE FOR CIRCLE PLOTTING : https://stackoverflow.com/a/9216646
 
-    def step_change(self):
+    def step_changes(self):
         stepchange = 5 
         if self.center_y + self.radius>= self.ypos + self.height: # If the balloon passes the border
             self.forward = False #Make the balloon go backwards
