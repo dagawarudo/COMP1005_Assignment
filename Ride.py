@@ -1,5 +1,5 @@
 class Ride():
-    def __init__(self,xpos,ypos,width,height,ride_limit = 8):
+    def __init__(self,xpos,ypos,width,height,ride_limit = 5):
         self.xpos = xpos
         self.ypos = ypos
         self.width = width

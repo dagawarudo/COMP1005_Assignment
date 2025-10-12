@@ -88,7 +88,9 @@ class FerrisWheel(Ride):
             cubicle.transform_x = rotated_cubicle[0] + a
             cubicle.transform_y = rotated_cubicle[1] + b 
 
-            cubicle.angle += 15 
+            cubicle.angle += 15
+    def reset(self):
+        return
 
 
 

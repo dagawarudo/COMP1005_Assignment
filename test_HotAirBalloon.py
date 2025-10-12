@@ -16,7 +16,7 @@ wheel_list = [wheel1,wheel2,wheel3]
 plt.ion()
 plt.title("Showground")
 
-for t in range(30):
+for t in range(15):
     for i in wheel_list :
         i.plot_me(plt)
         i.step_changes()

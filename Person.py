@@ -18,7 +18,7 @@ class Person():
         change_y = ride_y - self.ypos
         distance = math.sqrt(change_x**2 +change_y**2) # Distance from ride to person 
 
-        if distance <= 10:
+        if distance <= 7:
             # If the person reaches the ride 
             self.reached_destination()
         #To get the unit vector 

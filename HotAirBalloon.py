@@ -19,6 +19,10 @@ class HotAirBalloon(Ride):
         x_mid = self.xpos + self.width/2
         y_mid = self.ypos + self.height/4
 
+        self.x_mid = x_mid # Used to make it easier for  reset method
+        self.y_mid = y_mid 
+
+
         self.radius = self.height/8 # Radius
 
         #Coordinates of the cubicle
@@ -34,13 +38,12 @@ class HotAirBalloon(Ride):
         self.center_y = y_mid + 2 * self.radius
 
     def plot_me(self,p):
-
         #plotting the figure
         p.plot(self.box_x,self.box_y) # box
-        p.plot(self.cubicle_x,self.cubicle_y) #Cubicle
-        p.plot(self.rope_x,self.rope_y) # Rope
+        p.fill(self.cubicle_x,self.cubicle_y, color = self.frame_color) #Cubicle
+        p.plot(self.rope_x,self.rope_y, color = "black") # Rope
 
-        circle = p.Circle((self.center_x, self.center_y), self.radius, color="black", fill=True,linewidth = 3) # Circle
+        circle = p.Circle((self.center_x, self.center_y), self.radius, color=self.balloon_color, fill=True,linewidth = 3) # Circle
         ax = p.gca()
         ax.add_patch(circle)
 
@@ -62,5 +65,22 @@ class HotAirBalloon(Ride):
             self.cubicle_y -= stepchange
             self.center_y -= stepchange
             self.rope_y -= stepchange
+
+    def reset(self):
+        x_mid = self.x_mid
+        y_mid = self.y_mid
+        #Coordinates of the cubicle
+        self.cubicle_x = np.array([x_mid-x_mid*0.05,x_mid+x_mid*0.05,x_mid+x_mid*0.05,x_mid-x_mid*0.05,x_mid-x_mid*0.05])
+        self.cubicle_y = np.array([self.ypos,self.ypos,y_mid,y_mid,self.ypos])
+        
+        #Coordinates of the rope
+        self.rope_x = np.array([x_mid, x_mid])
+        self.rope_y = np.array([y_mid, y_mid + self.radius])
+        
+        #Coordinates of the circle 
+        self.center_x = x_mid
+        self.center_y = y_mid + 2 * self.radius
+
+
 
 

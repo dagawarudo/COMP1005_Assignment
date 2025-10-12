@@ -79,13 +79,13 @@ def interactive_mode():
         ride = get_ride(ride_options, positions[i])
         ride_list.append(ride)
     
-    no_of_people = get_int("How many people would you like (a minimum of 10 and a maximum of 50 people) ",10,50)
+    no_of_people = get_int("How many people would you like (a minimum of 20 and a maximum of 60 people) ",20,60)
     
     for _ in range(no_of_people):
-        step_size = random.randint(10,20)
-        size = random.randint(1,4)
+        step_size = random.randint(10,15)
+        size = random.randint(1,2)
         color = random.choice(color_list)
-        person = Person(0,0,color,size,step_size)
+        person = Person(0,150,color,size,step_size)
         patron_list.append(person)
     
     for person in patron_list:
@@ -96,7 +96,7 @@ def interactive_mode():
 
 
     plt.ion()
-    for i in range(200):
+    for i in range(100):
         #TODO update transformation once patrons exit
         plot_area(i)
         for ride in ride_list:
@@ -124,6 +124,7 @@ def interactive_mode():
                         ride_choice = random.choice(ride_list)
                         passenger.insert_ride(ride_choice)
                         patron_list.append(passenger)
+                    ride.reset()
                     
             ride_queue = ride.get_queue()    
             for patrons in ride_queue:
@@ -159,15 +160,15 @@ def plot_area(i):
     plt.show()
 
 def get_color():
-    color_options = "\nType the relevant letter for the following colors (default is pink)" \
+    color_options = "\nType the relevant letter for the following colors (default/invalid is pink)" \
     "\n Red     -   R" \
     "\n Blue    -   B" \
     "\nYellow   -   Y" \
     "\nPink     -   P" \
     "\nGreen    -   G" \
-    "\nBlack    -   B" \
+    "\nBlack    -   K" \
     "\nOrange   -   O\n"
-    color = input(color_options)
+    color = input(color_options).upper()
     match color:
         case "R":
             return "red"

@@ -96,4 +96,6 @@ class Pirate(Ride):
             if self.angle == -90: # once it reaches -90 degrees make it go forward
                 self.forward = True 
 
-            
+    def reset(self):
+        self.plot_ship_x = self.transform_ship_x
+        self.plot_ship_y = self.transform_ship_y
