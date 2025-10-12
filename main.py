@@ -64,8 +64,8 @@ def get_ride(ride_options, ride_input):
 
 
 def interactive_mode():
-    color_list = ["red","blue","yellow", "green","orange"]
-    positions = [[25,200,50,50],[100,200,50,50],[175,200,50,50],[25,50,50,50],[100,50,50,50],[175,50,50,50]]
+    color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
+    positions = [[25,200,50,50],[150,200,50,50],[275,200,50,50],[25,50,50,50],[150,50,50,50],[275,50,50,50]]
     ride_list = []
     patron_list = []
     patron_exit_list = []
@@ -73,7 +73,7 @@ def interactive_mode():
     no_of_rides = get_int("How many rides would you like (a minimum of 2  and a maximum of 6 rides) ",2,6)
     
     for i in range(no_of_rides):
-        ride_options = "Hot Air Balloon     -   B\n" \
+        ride_options = "\nHot Air Balloon     -   B\n" \
         "Ferris Wheel   -   W\n" \
         "Pirate Ship    -   P\n"
         ride = get_ride(ride_options, positions[i])
@@ -82,8 +82,8 @@ def interactive_mode():
     no_of_people = get_int("How many people would you like (a minimum of 10 and a maximum of 50 people) ",10,50)
     
     for _ in range(no_of_people):
-        step_size = random.randint(5,10)
-        size = random.randint(5,10)
+        step_size = random.randint(10,20)
+        size = random.randint(1,4)
         color = random.choice(color_list)
         person = Person(0,0,color,size,step_size)
         patron_list.append(person)
@@ -96,7 +96,8 @@ def interactive_mode():
 
 
     plt.ion()
-    for i in range(1000):
+    for i in range(200):
+        #TODO update transformation once patrons exit
         plot_area(i)
         for ride in ride_list:
             ride.plot_me(plt)
@@ -110,7 +111,6 @@ def interactive_mode():
                 ride_count = ride.get_count()
                 ride.step_changes()
                 if ride_count < 10:
-                    ride.plot_me(plt)
                     ride_count += 1
                     ride.set_count(ride_count)
                 
@@ -137,7 +137,7 @@ def interactive_mode():
                 person_ride.insert_queue(person)
                 patron_list.remove(person)
 
-        print(f"{i} th attempt ")
+        print(f"{i+1} th attempt ")
         plt.pause(0.005)
     plt.ioff()
     sys.exit()
@@ -147,7 +147,7 @@ def batch_mode():
     sys.exit()
 
 def plot_area(i):
-    plt.xlim(0,300)
+    plt.xlim(0,400)
     plt.ylim(0,300)
     plt.title("Showground")
     if i >= 5:
@@ -159,7 +159,14 @@ def plot_area(i):
     plt.show()
 
 def get_color():
-    color_options = "\nType the relevant letter for the following colors (default is pink)\nRed\t-\tR\nBlue\t-\tB\nYellow\t-\tY"
+    color_options = "\nType the relevant letter for the following colors (default is pink)" \
+    "\n Red     -   R" \
+    "\n Blue    -   B" \
+    "\nYellow   -   Y" \
+    "\nPink     -   P" \
+    "\nGreen    -   G" \
+    "\nBlack    -   B" \
+    "\nOrange   -   O\n"
     color = input(color_options)
     match color:
         case "R":
