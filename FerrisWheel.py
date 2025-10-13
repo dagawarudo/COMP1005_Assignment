@@ -43,7 +43,8 @@ class FerrisWheel(Ride):
             self.cubicles_list.append(cubicle)
 
         
-    def plot_me(self, p):  
+    def plot_me(self, p):
+        #plot the ferris wheel  
 
         #plotting the figure
         p.plot([self.xpos, self.x, self.x, self.xpos, self.xpos],[self.ypos, self.ypos,self.y, self.y,self.ypos]) # box
@@ -90,6 +91,7 @@ class FerrisWheel(Ride):
 
             cubicle.angle += 15
     def reset(self):
+        #return 
         return
 
 

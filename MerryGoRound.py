@@ -55,7 +55,7 @@ class FerrisWheel():
         center_y = (y+self.ypos)/2
         radius = (x - center_x)  
 
-         #plotting the figure
+        #plotting the figure
         p.plot([self.xpos, x, x, self.xpos, self.xpos],[self.ypos, self.ypos,y, y,self.ypos]) # box
         p.plot(self.transform_frame_x, self.transform_frame_y, self.frame_color) #frame
         circle = p.Circle((center_x, center_y), radius, color="black", fill=False,linewidth = 3)
@@ -73,6 +73,7 @@ class FerrisWheel():
             cubicle_plot = p.plot(cubicle_x, cubicle_y,"o",color = cubicle_color,markersize = cubicle_size)
 
     def step_changes(self):
+        #Update animation state
         
         #Coordinates of the pivet
         a = self.center_x

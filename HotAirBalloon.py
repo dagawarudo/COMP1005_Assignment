@@ -38,6 +38,7 @@ class HotAirBalloon(Ride):
         self.center_y = y_mid + 2 * self.radius
 
     def plot_me(self,p):
+        #plot the hot air balloon
         #plotting the figure
         p.plot(self.box_x,self.box_y) # box
         p.fill(self.cubicle_x,self.cubicle_y, color = self.frame_color) #Cubicle
@@ -67,6 +68,7 @@ class HotAirBalloon(Ride):
             self.rope_y -= stepchange
 
     def reset(self):
+        # Reset the ride to its initial state 
         x_mid = self.x_mid
         y_mid = self.y_mid
         #Coordinates of the cubicle

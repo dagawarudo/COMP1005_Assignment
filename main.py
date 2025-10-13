@@ -24,6 +24,9 @@ def main() :
     else:
         sys.exit("For interactive mode type in \'-i\' , for batch mode type in \'-f\' and the relevant CSV file ")
 def get_int(text, less, greater):
+    """
+    Function is used to vaidate integer from the user 
+    """
     while True:
         try:
             n = int(input(text))
@@ -35,6 +38,9 @@ def get_int(text, less, greater):
             return n 
         
 def get_ride(ride_options, ride_input):
+    """
+    Function is used to get rides from the user.
+    """
     while True:
         ride = input(f"Select your rides by typing the relevant letters \n{ride_options} ")
         xpos = ride_input[0]
@@ -64,6 +70,9 @@ def get_ride(ride_options, ride_input):
 
 
 def interactive_mode():
+    """
+    Interactive mode which allows the user to put their inputs to simulate the rides 
+    """
     color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
     positions = [[25,200,50,50],[150,200,50,50],[275,200,50,50],[25,50,50,50],[150,50,50,50],[275,50,50,50]]
     ride_list = []
@@ -71,17 +80,17 @@ def interactive_mode():
     patron_exit_list = []
     
     no_of_rides = get_int("How many rides would you like (a minimum of 2  and a maximum of 6 rides) ",2,6)
-    
-    for i in range(no_of_rides):
-        ride_options = "\nHot Air Balloon     -   B\n" \
+    ride_options = "\nHot Air Balloon     -   B\n" \
         "Ferris Wheel   -   W\n" \
         "Pirate Ship    -   P\n"
+    for i in range(no_of_rides):
         ride = get_ride(ride_options, positions[i])
         ride_list.append(ride)
     
     no_of_people = get_int("How many people would you like (a minimum of 20 and a maximum of 60 people) ",20,60)
     
     for _ in range(no_of_people):
+        #Assign initial inputs to people
         step_size = random.randint(10,15)
         size = random.randint(1,2)
         color = random.choice(color_list)
@@ -96,44 +105,48 @@ def interactive_mode():
 
 
     plt.ion()
-    for i in range(100):
-        #TODO update transformation once patrons exit
-        plot_area(i)
-        for ride in ride_list:
+    for i in range(100): #Simulation 
+        plot_area(i) #plot the simulation
+        for ride in ride_list: # plot the rides 
             ride.plot_me(plt)
-            if ride.ride_full() and ride.is_animated() == False:
+            if ride.ride_full() and ride.is_animated() == False: # If the queue is full and the ride isnt animated
                 ride_max = ride.get_limit()
-                for _ in range(ride_max):
+                for _ in range(ride_max): #Input the people in the queue inside the ride
                     patron = ride.remove_queue()
                     ride.insert_person(patron)
-                ride.set_animated(True)
-            if ride.is_animated() ==  True:
+                ride.set_animated(True) #  set ride.animating to be True 
+            if ride.is_animated() ==  True: 
                 ride_count = ride.get_count()
-                ride.step_changes()
-                if ride_count < 10:
+                ride.step_changes() # Update animation of the ride 
+                if ride_count < 10: 
                     ride_count += 1
                     ride.set_count(ride_count)
                 
-                else:
+                else: # initialize count back to zero and set make ride.animating = false
                     ride_count = 0
                     ride.set_count(ride_count)
                     ride.set_animated(False)
                     ride_max = ride.get_limit()
                     for _ in range(ride_max):
+                        #put the patrons back into the world map
                         passenger = ride.remove_passenger()
                         ride_choice = random.choice(ride_list)
                         passenger.insert_ride(ride_choice)
                         patron_list.append(passenger)
-                    ride.reset()
+                    ride.reset() # Put the ride back to its original state
                     
             ride_queue = ride.get_queue()    
             for patrons in ride_queue:
+                #plot patrons inside the queue
                 patrons.plot_me(plt)
         for person in patron_list:
+            #plot patrons inside the world map
             person.plot_me(plt)
             if person.get_destination():
+                #update the person's position if they havent reached their ride/destination
                 person.step_change(ride_list)
             if person.get_destination() == False:
+                #insert the person into their relevant ride queue if they have reached their destination
                 person_ride = person.get_ride()
                 person_ride.insert_queue(person)
                 patron_list.remove(person)
@@ -148,6 +161,9 @@ def batch_mode():
     sys.exit()
 
 def plot_area(i):
+    """
+    Used to plot the terrain.
+    """
     plt.xlim(0,400)
     plt.ylim(0,300)
     plt.title("Showground")

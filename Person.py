@@ -55,8 +55,10 @@ class Person():
         self.ride_choice = ride
         self.go_destination()
     def no_target(self):
+        #If they do not have a ride
         return self.ride_choice is None 
     def get_ride(self):
+        # Return the person's ride
         return self.ride_choice
     
         
