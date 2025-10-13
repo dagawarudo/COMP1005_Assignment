@@ -180,9 +180,7 @@ def batch_mode(arguments):
 
     print("Batch mode")
     sys.exit()
-def batch_get_ride():
-
-    return 
+    
 def validate_int(number, variable):
     try:
         return int(number)
