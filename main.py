@@ -13,6 +13,7 @@ from Person import Person
 import sys
 import matplotlib.pyplot as plt
 import random  
+import csv 
 
 def main() :
     if len(sys.argv) < 2:
@@ -20,7 +21,7 @@ def main() :
     elif sys.argv[1] == "-i":
         interactive_mode()
     elif sys.argv[1] == "-f":
-        batch_mode()
+        batch_mode(sys.argv)
     else:
         sys.exit("For interactive mode type in \'-i\' , for batch mode type in \'-f\' and the relevant CSV file ")
 def get_int(text, less, greater):
@@ -88,24 +89,13 @@ def interactive_mode():
         ride_list.append(ride)
     
     no_of_people = get_int("How many people would you like (a minimum of 20 and a maximum of 60 people) ",20,60)
-    
-    for _ in range(no_of_people):
-        #Assign initial inputs to people
-        step_size = random.randint(10,15)
-        size = random.randint(1,2)
-        color = random.choice(color_list)
-        person = Person(0,150,color,size,step_size)
-        patron_list.append(person)
-    
-    for person in patron_list:
-        #Initially asign a ride to a person
-        ride_choice = random.choice(ride_list)
-        person.insert_ride(ride_choice)
+
+    patron_list = assign_patron_list(patron_list,no_of_people,color_list,ride_list)
     #TODO 
 
 
     plt.ion()
-    for i in range(100): #Simulation 
+    for i in range(50): #Simulation 
         plot_area(i) #plot the simulation
         for ride in ride_list: # plot the rides 
             ride.plot_me(plt)
@@ -155,11 +145,91 @@ def interactive_mode():
         plt.pause(0.005)
     plt.ioff()
     sys.exit()
+def assign_patron_list(patron_list,no_of_people,color_list,ride_list):
+    for _ in range(no_of_people):
+        #Assign initial inputs to people
+        step_size = random.randint(10,15)
+        size = random.randint(1,2)
+        color = random.choice(color_list)
+        person = Person(0,150,color,size,step_size)
+        patron_list.append(person)
+    
+    for person in patron_list:
+        #Initially asign a ride to a person
+        ride_choice = random.choice(ride_list)
+        person.insert_ride(ride_choice)
+    return patron_list
+    
+def batch_mode(arguments):
+    color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
+    positions = [[25,200,50,50],[150,200,50,50],[275,200,50,50],[25,50,50,50],[150,50,50,50],[275,50,50,50]]
+    ride_list = []
+    csv_list = []
+    file_name = arguments[2]
+    print(f"file name is {file_name}")
+    with open(file_name) as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"]})
+    
+    balloon_no = csv_list[0]["balloon_no"]
+    wheel_no = csv_list[0]["wheel_no"]
+    pirate_no = csv_list[0]["pirate_no"]
+    person_no = csv_list[0]["person_no"]
 
-def batch_mode():
+    balloon_no = validate_int(balloon_no, "balloon_no")
+    wheel_no = validate_int(wheel_no,"wheel_no")
+    pirate_no = validate_int(pirate_no, "pirate_no")
+    person_no = validate_int(person_no, "person_n")
+
+    no_of_rides = balloon_no + wheel_no +pirate_no
+    if no_of_rides > 6 or no_of_rides < 2:
+        sys.exit("Please ensure that their is a minimum number of 2 rides and a maximum of 6 rides.")
+    if person_no > 60 or person_no < 20:
+        sys.exit("Please ensure that the maximum number of people is 60 and the minimum number is 20.")
+
+    balloon_count, wheel_count, pirate_count,person_count = 0
+    for i in range(no_of_rides):
+        ride_input = positions[i]
+        xpos = ride_input[0]
+        ypos = ride_input [1]
+        width = ride_input [2]
+        height = ride_input [3]
+        
+        if balloon_count < balloon_no:
+            balloon_color = random.choice(color_list)
+            frame_color = random.choice(color_list)
+            balloon = Balloon(xpos,ypos,width,height,balloon_color,frame_color)
+            ride_list.append(balloon)
+            balloon_count += 1
+            
+        if wheel_count < wheel_no:
+            cubicles = random.randint(4,8)
+            frame_color = random.choice(color_list)
+            wheel = Wheel(xpos,ypos,width,height,cubicles,frame_color)
+            ride_list.append(wheel)
+            wheel_count += 1
+
+        if pirate_count < pirate_no:
+            ship_color = random.choice(color_list)
+            frame_color = random.choice(color_list)
+            pirate = Pirate(xpos,ypos,width,height,ship_color,frame_color)
+            ride_list.append(pirate)
+            pirate_count += 1
+        
+
+    
+    
+    
+
+
     print("Batch mode")
     sys.exit()
-
+def validate_int(number, variable):
+    try:
+        return int(number)
+    except ValueError:
+        sys.exit(f"Please ensure that '{variable}' is an integer")
 def plot_area(i):
     """
     Used to plot the terrain.
@@ -203,6 +273,25 @@ def get_color():
         case _:
             return "pink"
     
+def simulate(no_of_people):
+    color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
+    positions = [[25,200,50,50],[150,200,50,50],[275,200,50,50],[25,50,50,50],[150,50,50,50],[275,50,50,50]]
+    ride_list = []
+    patron_list = []
+    patron_exit_list = []
+
+    for _ in range(no_of_people):
+        #Assign initial inputs to people
+        step_size = random.randint(10,15)
+        size = random.randint(1,2)
+        color = random.choice(color_list)
+        person = Person(0,150,color,size,step_size)
+        patron_list.append(person)
+
+    for person in patron_list:
+        #Initially asign a ride to a person
+        ride_choice = random.choice(ride_list)
+        person.insert_ride(ride_choice)
 
 if __name__ == "__main__":
     random.seed(1)
