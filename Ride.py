@@ -25,6 +25,10 @@ class Ride():
     def insert_queue(self, person):
         #Insert person into the queue
         self.queue.append(person)
+        position = len(self.queue) # Get position of the queue 
+        #Update the people's position
+        person.xpos = self.xpos + self.width+2
+        person.ypos = self.ypos + position*2
     def remove_queue(self):
         #Return top most person inside 
         return self.queue.pop(0)
