@@ -28,7 +28,7 @@ class FerrisWheel(Ride):
         self.radius = (self.x - self.center_x) #Radius 
 
         cubicle_size = 4
-        color_list = ["red","blue","yellow", "green","orange"]
+        color_list = ["red","blue","yellow", "green","orange","pink","purple","cyan"]
 
         for i  in range(self.cubicles): # To plot each cubicle in thr wheel
             cubicle_angle = 2 *np.pi *i/cubicles #To divide the cubicles evenly in the wheel
@@ -36,7 +36,7 @@ class FerrisWheel(Ride):
             cubicle_x = self.center_x + self.radius *np.cos(cubicle_angle)
             cubicle_y = self.center_y + self.radius * np.sin(cubicle_angle)
 
-            cubicle_color = random.choice(color_list)
+            cubicle_color = color_list[i]
 
             cubicle = Cubicle(cubicle_x, cubicle_y,cubicle_angle,cubicle_size,cubicle_color)
 
@@ -49,7 +49,7 @@ class FerrisWheel(Ride):
         #plotting the figure
         p.plot([self.xpos, self.x, self.x, self.xpos, self.xpos],[self.ypos, self.ypos,self.y, self.y,self.ypos]) # box
         p.plot(self.transform_frame_x, self.transform_frame_y, self.frame_color) #frame
-        circle = p.Circle((self.center_x, self.center_y), self.radius, color="black", fill=False,linewidth = 3) # Wheel
+        circle = p.Circle((self.center_x, self.center_y), self.radius, color="black", fill=False,linewidth  = 2) # Wheel
         ax = p.gca()
         ax.add_patch(circle)
 

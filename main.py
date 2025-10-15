@@ -14,6 +14,7 @@ import sys
 import matplotlib.pyplot as plt
 import random  
 import csv 
+import matplotlib.image as pimg
 
 def main() :
     if len(sys.argv) < 2:
@@ -100,7 +101,7 @@ def assign_patron_list(patron_list,no_of_people,color_list,ride_list):
     for _ in range(no_of_people):
         #Assign initial inputs to people
         step_size = random.randint(10,15)
-        size = random.randint(1,2)
+        size = random.randint(2,5)
         color = random.choice(color_list)
         person = Person(0,150,color,size,step_size)
         patron_list.append(person)
@@ -113,12 +114,11 @@ def assign_patron_list(patron_list,no_of_people,color_list,ride_list):
 
 def batch_mode(arguments):
     color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
-    positions = [[25,200,50,50],[150,200,50,50],[275,200,50,50],[25,50,50,50],[150,50,50,50],[275,50,50,50]]
+    positions = [[25+1,200,50,50],[150+2,210,50,50],[300,200,50,50],[25+1,50,50,50],[150+2,30,50,50],[300,50,50,50]]
     ride_list = []
     patron_list = []
     csv_list = []
     file_name = arguments[2]
-    print(f"file name is {file_name}")
     with open(file_name) as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -135,7 +135,6 @@ def batch_mode(arguments):
     person_no = validate_int(person_no, "person_n")
 
     no_of_rides = balloon_no + wheel_no +pirate_no
-    print(f"no of rides is {no_of_rides}")
     if no_of_rides > 6 or no_of_rides < 2:
         sys.exit("Please ensure that their is a minimum number of 2 rides and a maximum of 6 rides.")
     if person_no > 60 or person_no < 20:
@@ -144,7 +143,6 @@ def batch_mode(arguments):
     balloon_count =  wheel_count = pirate_count = person_count = 0
     for i in range(no_of_rides):
         ride_input = positions[i]
-        print(ride_input)
         xpos = ride_input[0]
         ypos = ride_input [1]
         width = ride_input [2]
@@ -190,13 +188,12 @@ def plot_area(i):
     """
     Used to plot the terrain.
     """
+    img = pimg.imread("background.png")
+    img = img[::-1]
     plt.xlim(0,400)
     plt.ylim(0,300)
-    plt.title("Showground")
-    if i >= 5:
-        plt.gca().set_facecolor('lightgreen') 
-    else:
-        plt.gca().set_facecolor("lightgreen")
+    plt.title(f"Showground, Timestep {i}")
+    plt.imshow(img, origin="upper")
     plt.pause(0.25)
     plt.cla()
     plt.show()
@@ -231,7 +228,7 @@ def get_color():
     
 def simulate(ride_list,patron_list):
     plt.ion()
-    for i in range(50): #Simulation 
+    for i in range(100): #Simulation 
         plot_area(i) #plot the simulation
         for ride in ride_list: # plot the rides 
             ride.plot_me(plt)
