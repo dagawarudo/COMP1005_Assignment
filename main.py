@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import random  
 import csv 
 import matplotlib.image as pimg
+import matplotlib.patches as patches
 
 def main() :
     if len(sys.argv) < 2:
@@ -35,6 +36,7 @@ def get_int(text, less, greater):
         try:
             n = int(input(text))
             if n < less or n > greater:
+                n = None 
                 raise ValueError
         except ValueError:
             print("Please select the valid inputs")
@@ -79,9 +81,11 @@ def interactive_mode():
     Interactive mode which allows the user to put their inputs to simulate the rides 
     """
     color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
-    positions = [[25,200,50,50],[150,200,50,50],[275,200,50,50],[25,50,50,50],[150,50,50,50],[275,50,50,50]]
+    positions = [[25+1,200,50,50],[150+2,210,50,50],[300,200,50,50],[25+1,50,50,50],[150+2,30,50,50],[300,50,50,50]]
+    object_positions = [[150,110,100,80]]
     ride_list = []
     patron_list = []
+    object_list = []
     patron_exit_list = []
     
     no_of_rides = get_int("How many rides would you like (a minimum of 2  and a maximum of 6 rides) ",2,6)
@@ -94,16 +98,29 @@ def interactive_mode():
     
     no_of_people = get_int("How many people would you like (a minimum of 20 and a maximum of 60 people) ",20,60)
 
+    for i in range(len(object_positions)):
+        object_input = object_positions[i]
+        xpos = object_input[0]
+        ypos = object_input [1]
+        width = object_input [2]
+        height = object_input [3]
+        object = Ride(xpos,ypos,width,height)
+        object_list.append(object)
+
+    for i in range(len(ride_list)):
+        ride = ride_list[i]
+        object_list.append(ride)
+
     patron_list = assign_patron_list(patron_list,no_of_people,color_list,ride_list)
 
-    simulate(ride_list,patron_list)
+    simulate(ride_list,patron_list,object_list,patron_exit_list)
 
 def assign_patron_list(patron_list,no_of_people,color_list,ride_list):
     for _ in range(no_of_people):
         #Assign initial inputs to people
         step_size = random.randint(10,15)
         size = random.randint(2,5)
-        color = random.choice(color_list)
+        color = random.choice(["blue","pink"])
         person = Person(0,150,color,size,step_size)
         patron_list.append(person)
     
@@ -120,6 +137,7 @@ def batch_mode(arguments):
     ride_list = []
     patron_list = []
     object_list = []
+    patron_exit_list = []
     csv_list = []
     file_name = arguments[2]
     with open(file_name) as file:
@@ -171,6 +189,7 @@ def batch_mode(arguments):
             pirate = Pirate(xpos,ypos,width,height,ship_color,frame_color)
             ride_list.append(pirate)
             pirate_count += 1
+    
     for i in range(len(object_positions)):
         object_input = object_positions[i]
         xpos = object_input[0]
@@ -179,15 +198,14 @@ def batch_mode(arguments):
         height = object_input [3]
         object = Ride(xpos,ypos,width,height)
         object_list.append(object)
-    print(f"Length of ride is {len(ride_list)}")
-    print(f"Length of object before is {len(object_list)}")
+
     for i in range(len(ride_list)):
         ride = ride_list[i]
         object_list.append(ride)
-    print(f"Length of object after {len(object_list)}")
+
 
     patron_list = assign_patron_list(patron_list,person_no,color_list,ride_list)
-    simulate(ride_list,patron_list,object_list)
+    simulate(ride_list,patron_list,object_list,patron_exit_list)
 
     
     
@@ -202,17 +220,23 @@ def validate_int(number, variable):
         return int(number)
     except ValueError:
         sys.exit(f"Please ensure that '{variable}' is an integer")
-def plot_area(i):
+def plot_area(i,noon,night):
     """
     Used to plot the terrain.
     """
     #object_positions = [[150,110,90,70]]
+    ax = plt.gca()
     img = pimg.imread("background.png")
     img = img[::-1]
     plt.xlim(0,400)
     plt.ylim(0,300)
     plt.title(f"Showground, Timestep {i}")
+    if i >= night:
+        ax.add_patch(patches.Rectangle((0, 0), 400, 300, facecolor='black', alpha=0.4))
+    elif i >= noon:
+        ax.add_patch(patches.Rectangle((0, 0), 400, 300, facecolor='yellow', alpha=0.2))
     plt.imshow(img, origin="upper")
+
     plt.plot([150,150+90,150+90,150,150],[110,110,110+70,110+70,110])
     plt.pause(0.25)
     plt.cla()
@@ -246,10 +270,14 @@ def get_color():
         case _:
             return "pink"
     
-def simulate(ride_list,patron_list,object_list):
+def simulate(ride_list,patron_list,object_list,patron_exit_list):
+    n = 100
+    noon = n/2
+    night = 3 *n/4
+    exit_pos = [400,150]
     plt.ion()
-    for i in range(100): #Simulation 
-        plot_area(i) #plot the simulation
+    for i in range(n): #Simulation 
+        plot_area(i,noon,night) #plot the terrain
         for ride in ride_list: # plot the rides 
             ride.plot_me(plt)
             if ride.ride_full() and ride.is_animated() == False: # If the queue is full and the ride isnt animated
@@ -282,6 +310,15 @@ def simulate(ride_list,patron_list,object_list):
             for patrons in ride_queue:
                 #plot patrons inside the queue
                 patrons.plot_me(plt)
+        if i >= night:
+            for person in patron_list:
+                patron_exit_list.append(person)
+                patron_list.remove(person)
+            for ride in ride_list:
+                ride_queue = ride.get_queue()
+                for person in ride_queue:
+                    patron_exit_list.append(person)
+                    ride_queue.remove(person)
         for person in patron_list:
             #plot patrons inside the world map
             person.plot_me(plt)
@@ -293,6 +330,12 @@ def simulate(ride_list,patron_list,object_list):
                 person_ride = person.get_ride()
                 person_ride.insert_queue(person)
                 patron_list.remove(person)
+        for person in patron_exit_list:
+            if person.get_exit():
+                patron_exit_list.remove(person)
+            else:
+                person.plot_me(plt)
+                person.go_exit(exit_pos[0],exit_pos[1],object_list)
 
         
         plt.pause(0.005)
