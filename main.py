@@ -73,6 +73,7 @@ def get_ride(ride_options, ride_input):
                 frame_color = get_color()
                 return Pirate(xpos,ypos,width,height,ship_color,frame_color)
             case _:
+                ride = None 
                 print("Please follow the relevant instructions ")
 
 
