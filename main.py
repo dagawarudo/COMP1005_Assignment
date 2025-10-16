@@ -10,6 +10,7 @@ from Pirate  import Pirate
 from HotAirBalloon import HotAirBalloon as Balloon
 from FerrisWheel import FerrisWheel as Wheel
 from Person import Person
+from Ride import Ride
 import sys
 import matplotlib.pyplot as plt
 import random  
@@ -115,8 +116,10 @@ def assign_patron_list(patron_list,no_of_people,color_list,ride_list):
 def batch_mode(arguments):
     color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
     positions = [[25+1,200,50,50],[150+2,210,50,50],[300,200,50,50],[25+1,50,50,50],[150+2,30,50,50],[300,50,50,50]]
+    object_positions = [[150,110,100,80]]
     ride_list = []
     patron_list = []
+    object_list = []
     csv_list = []
     file_name = arguments[2]
     with open(file_name) as file:
@@ -168,8 +171,23 @@ def batch_mode(arguments):
             pirate = Pirate(xpos,ypos,width,height,ship_color,frame_color)
             ride_list.append(pirate)
             pirate_count += 1
+    for i in range(len(object_positions)):
+        object_input = object_positions[i]
+        xpos = object_input[0]
+        ypos = object_input [1]
+        width = object_input [2]
+        height = object_input [3]
+        object = Ride(xpos,ypos,width,height)
+        object_list.append(object)
+    print(f"Length of ride is {len(ride_list)}")
+    print(f"Length of object before is {len(object_list)}")
+    for i in range(len(ride_list)):
+        ride = ride_list[i]
+        object_list.append(ride)
+    print(f"Length of object after {len(object_list)}")
+
     patron_list = assign_patron_list(patron_list,person_no,color_list,ride_list)
-    simulate(ride_list,patron_list)
+    simulate(ride_list,patron_list,object_list)
 
     
     
@@ -188,12 +206,14 @@ def plot_area(i):
     """
     Used to plot the terrain.
     """
+    #object_positions = [[150,110,90,70]]
     img = pimg.imread("background.png")
     img = img[::-1]
     plt.xlim(0,400)
     plt.ylim(0,300)
     plt.title(f"Showground, Timestep {i}")
     plt.imshow(img, origin="upper")
+    plt.plot([150,150+90,150+90,150,150],[110,110,110+70,110+70,110])
     plt.pause(0.25)
     plt.cla()
     plt.show()
@@ -226,7 +246,7 @@ def get_color():
         case _:
             return "pink"
     
-def simulate(ride_list,patron_list):
+def simulate(ride_list,patron_list,object_list):
     plt.ion()
     for i in range(100): #Simulation 
         plot_area(i) #plot the simulation
@@ -267,7 +287,7 @@ def simulate(ride_list,patron_list):
             person.plot_me(plt)
             if person.get_destination():
                 #update the person's position if they havent reached their ride/destination
-                person.step_change(ride_list)
+                person.step_change(object_list)
             if person.get_destination() == False:
                 #insert the person into their relevant ride queue if they have reached their destination
                 person_ride = person.get_ride()

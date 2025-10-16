@@ -35,7 +35,12 @@ class Person():
                     return
                 y *= -1
                 new_y = self.ypos + y * self.step_size * 1.5
-                new_x = self.xpos
+                new_x = self.xpos + random.choice([-3,3])
+                if ride.is_collides(new_x, new_y):
+                    y*= -1
+                    x*= -1
+                    new_y = self.ypos + y * self.step_size 
+                    new_x = self.xpos + x * self.step_size * 1.5 
         self.xpos = new_x 
         self.ypos = new_y
 

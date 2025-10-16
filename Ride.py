@@ -10,9 +10,9 @@ class Ride():
         self.passengers = []
         self.animating = False
 
-    def is_collides(self, x,y):
+    def is_collides(self, x,y,margin = 5):
         # Compares the coordinates of an object and rides and checks if the object would be inside the ride 
-        return (self.xpos < x < self.xpos + self.width) and (self.ypos < y < self.ypos + self.height)
+        return (self.xpos - margin < x < self.xpos + self.width +margin) and (self.ypos -margin < y < self.ypos + self.height+margin)
 
     def insert_person(self, person):
         #Insert person into the ride
@@ -50,6 +50,10 @@ class Ride():
     def get_count(self):
         #return animation count
         return self.count 
+    def get_width(self):
+        return self.width
+    def get_height(self):
+        return self.height
     
     def set_count(self, count):
         #set the relevant count
