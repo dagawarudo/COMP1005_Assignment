@@ -314,11 +314,13 @@ def simulate(ride_list,patron_list,object_list,patron_exit_list):
             for person in patron_list:
                 patron_exit_list.append(person)
                 patron_list.remove(person)
+                person.reached_destination()
             for ride in ride_list:
                 ride_queue = ride.get_queue()
                 for person in ride_queue:
                     patron_exit_list.append(person)
                     ride_queue.remove(person)
+                    person.reached_destination()
         for person in patron_list:
             #plot patrons inside the world map
             person.plot_me(plt)

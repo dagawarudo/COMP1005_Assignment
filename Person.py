@@ -92,9 +92,6 @@ class Person():
 
         for ride in object_list:
             if ride.is_collides(new_x, new_y):
-                if ride == self.get_ride():
-                    self.reached_destination()
-                    return
                 y *= -1.2
                 new_y = self.ypos + y * self.step_size 
                 new_x = self.xpos 
