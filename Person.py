@@ -35,46 +35,72 @@ class Person():
                     self.reached_destination()
                     return
                 y *= -1.2
-                new_y = self.ypos + y * self.step_size 
+                new_y = self.ypos + y * self.step_size *1.5
                 new_x = self.xpos 
                 if ride.is_collides(new_x, new_y):
                     y*= -1
                     x*= -1
                     new_y = self.ypos + y * self.step_size 
-                    new_x = self.xpos + x * self.step_size * 1.5 
+                    new_x = self.xpos + x * self.step_size 
         self.xpos = new_x 
         self.ypos = new_y
 
 
     def go_destination(self):
-        #Person is going towards the target/ride 
+        """
+        Person is going towards the target/ride, set destination to True 
+        """
         self.destination = True 
     def get_destination(self):
+        """
+        Return destination
+        """
         return self.destination
     
     def reached_destination(self):
+        """
+        If the person has reached their destination, set destination to False 
+        """
         #Person is no longer going towards the target/ride 
         self.destination = False
 
     def plot_me(self,p):
-        #Plot the person
+        """
+        Plot the person
+        """
         p.plot(self.xpos, self.ypos, "o", color = self.color, markersize= self.size)
 
     def insert_ride(self, ride):
-        #Insert the target/ride 
+        """
+        Insert their target ride 
+        """
         self.ride_choice = ride
         self.go_destination()
     def no_target(self):
+        """
+        return True if they do not have a target/ride else False
+        """
         #If they do not have a ride
         return self.ride_choice is None 
     def get_ride(self):
-        # Return the person's ride
+        """
+        Return the person's ride 
+        """
         return self.ride_choice
     def set_exit(self):
+        """
+        If they reach their exit set it to True
+        """
         self.exit = True
     def get_exit(self):
+        """
+        Return the exit vairable (bool)
+        """
         return self.exit
     def go_exit(self,exit_x,exit_y,object_list = []):
+        """
+        Update their position towards to the exit coordinates 
+        """
         change_x = exit_x - self.xpos
         change_y = exit_y - self.ypos
         distance = math.sqrt(change_x**2 +change_y**2)
@@ -91,11 +117,11 @@ class Person():
         new_y = self.ypos + y * self.step_size
 
         for ride in object_list:
-            if ride.is_collides(new_x, new_y):
+            if ride.is_collides(new_x, new_y): #If the person collides with the object 
                 y *= -1.2
                 new_y = self.ypos + y * self.step_size 
                 new_x = self.xpos 
-                if ride.is_collides(new_x, new_y):
+                if ride.is_collides(new_x, new_y): #If it collides again 
                     y*= -1
                     x*= -1
                     new_y = self.ypos + y * self.step_size 

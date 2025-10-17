@@ -19,14 +19,19 @@ import matplotlib.image as pimg
 import matplotlib.patches as patches
 
 def main() :
+    """
+    main function
+    """
+    exit_text = "For interactive mode type in \'-i\' , for batch mode type in \'-f\' and the relevant CSV file "
+    random.seed(1)
     if len(sys.argv) < 2:
-        sys.exit("For interactive mode type in \'-i\' , for batch mode type in \'-f\' and the relevant CSV file ")
+        sys.exit(exit_text)
     elif sys.argv[1] == "-i":
-        interactive_mode()
+        interactive_mode() # Go to interactive mode 
     elif sys.argv[1] == "-f":
-        batch_mode(sys.argv)
+        batch_mode(sys.argv) # Go to batch mode 
     else:
-        sys.exit("For interactive mode type in \'-i\' , for batch mode type in \'-f\' and the relevant CSV file ")
+        sys.exit(exit_text)
 def get_int(text, less, greater):
     """
     Function is used to vaidate integer from the user 
@@ -50,23 +55,24 @@ def get_ride(ride_options, ride_input):
     ride = None
     while ride is None:
         ride = input(f"Select your rides by typing the relevant letters \n{ride_options} ")
+        # Save position info easily 
         xpos = ride_input[0]
         ypos = ride_input [1]
         width = ride_input [2]
         height = ride_input [3]
         match ride.upper():
-            case "B":
+            case "B": #If user chooses balloon 
                 print("Input color of the balloon's box")
                 frame_color = get_color()
                 print("Input color of the balloon")
                 balloon_color = get_color()
                 return Balloon(xpos,ypos,width,height,balloon_color,frame_color)
-            case "W":
+            case "W": # If user chooses Ferris Wheel 
                 cubicles = get_int("Input the number of cubicles (minimum 4 maximum 8) ",4,8)
                 print("Input color of the frame")
                 frame_color = get_color()
                 return Wheel(xpos,ypos,width,height,cubicles,frame_color)
-            case "P":
+            case "P": # If user chooses Pirate Ship
                 print("Input color of Pirate Sheep ")
                 ship_color = get_color()
                 print("Input color of the frame ")
@@ -95,7 +101,7 @@ def interactive_mode():
         "Pirate Ship    -   P\n"
     for i in range(no_of_rides):
         ride = get_ride(ride_options, positions[i])
-        ride_list.append(ride)
+        ride_list.append(ride) # Append each ride to a list 
     
     no_of_people = get_int("How many people would you like (a minimum of 20 and a maximum of 60 people) ",20,60)
 
@@ -106,32 +112,35 @@ def interactive_mode():
         width = object_input [2]
         height = object_input [3]
         object = Ride(xpos,ypos,width,height)
-        object_list.append(object)
+        object_list.append(object) # Append object to a list
 
     for i in range(len(ride_list)):
         ride = ride_list[i]
-        object_list.append(ride)
+        object_list.append(ride) # Append all rides into object lsit 
 
-    patron_list = assign_patron_list(patron_list,no_of_people,color_list,ride_list)
+    patron_list = assign_patron_list(patron_list,no_of_people,ride_list)
 
     simulate(ride_list,patron_list,object_list,patron_exit_list)
 
-def assign_patron_list(patron_list,no_of_people,color_list,ride_list):
+def assign_patron_list(patron_list,no_of_people,ride_list):
     for _ in range(no_of_people):
-        #Assign initial inputs to people
+        # Assign initial inputs to people
         step_size = random.randint(10,15)
         size = random.randint(2,5)
         color = random.choice(["blue","pink"])
         person = Person(0,150,color,size,step_size)
-        patron_list.append(person)
+        patron_list.append(person) # append each person into a list 
     
     for person in patron_list:
-        #Initially asign a ride to a person
+        # Initially asign a ride to a person
         ride_choice = random.choice(ride_list)
         person.insert_ride(ride_choice)
     return patron_list
 
 def batch_mode(arguments):
+    """
+    Uses the given csv file in the command line and simulates the ride 
+    """
     color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
     positions = [[25+1,200,50,50],[150+2,210,50,50],[300,200,50,50],[25+1,50,50,50],[150+2,30,50,50],[300,50,50,50]]
     object_positions = [[150,110,100,80]]
@@ -151,6 +160,7 @@ def batch_mode(arguments):
     pirate_no = csv_list[0]["pirate_no"]
     person_no = csv_list[0]["person_no"]
 
+    # Ensure all of them are integers 
     balloon_no = validate_int(balloon_no, "balloon_no")
     wheel_no = validate_int(wheel_no,"wheel_no")
     pirate_no = validate_int(pirate_no, "pirate_no")
@@ -162,7 +172,9 @@ def batch_mode(arguments):
     if person_no > 60 or person_no < 20:
         sys.exit("Please ensure that the maximum number of people is 60 and the minimum number is 20.")
 
-    balloon_count =  wheel_count = pirate_count = person_count = 0
+    balloon_count =  wheel_count = pirate_count = 0
+
+    # Input details for each ride 
     for i in range(no_of_rides):
         ride_input = positions[i]
         xpos = ride_input[0]
@@ -191,6 +203,7 @@ def batch_mode(arguments):
             ride_list.append(pirate)
             pirate_count += 1
     
+    # Get object details and append to a list 
     for i in range(len(object_positions)):
         object_input = object_positions[i]
         xpos = object_input[0]
@@ -198,25 +211,24 @@ def batch_mode(arguments):
         width = object_input [2]
         height = object_input [3]
         object = Ride(xpos,ypos,width,height)
-        object_list.append(object)
+        object_list.append(object) 
 
+    # Append all rides and put them to object list 
     for i in range(len(ride_list)):
         ride = ride_list[i]
         object_list.append(ride)
 
 
-    patron_list = assign_patron_list(patron_list,person_no,color_list,ride_list)
+    patron_list = assign_patron_list(patron_list,person_no,ride_list)
     simulate(ride_list,patron_list,object_list,patron_exit_list)
-
-    
-    
-    
-
 
     print("Batch mode")
     sys.exit()
     
 def validate_int(number, variable):
+    """
+    Used to validate integers in batch mode
+    """
     try:
         return int(number)
     except ValueError:
@@ -244,6 +256,9 @@ def plot_area(i,noon,night):
     plt.show()
 
 def get_color():
+    """
+    Used to get colors from the given options 
+    """
     color_options = "\nType the relevant letter for the following colors (default/invalid is pink)" \
     "\n Red     -   R" \
     "\n Blue    -   B" \
@@ -272,18 +287,21 @@ def get_color():
             return "pink"
     
 def simulate(ride_list,patron_list,object_list,patron_exit_list):
+    """
+    Simulate and plot the rides and people 
+    """
     n = 100
     noon = n/2
     night = 3 *n/4
-    exit_pos = [400,150]
+    exit_pos = [400,150] # Exit coordinates 
     plt.ion()
-    for i in range(n): #Simulation 
-        plot_area(i,noon,night) #plot the terrain
+    for i in range(n): # Simulation 
+        plot_area(i,noon,night) # plot the terrain
         for ride in ride_list: # plot the rides 
             ride.plot_me(plt)
             if ride.ride_full() and ride.is_animated() == False: # If the queue is full and the ride isnt animated
                 ride_max = ride.get_limit()
-                for _ in range(ride_max): #Input the people in the queue inside the ride
+                for _ in range(ride_max): # Input the people in the queue inside the ride
                     patron = ride.remove_queue()
                     ride.insert_person(patron)
                 ride.set_animated(True) #  set ride.animating to be True 
@@ -300,7 +318,7 @@ def simulate(ride_list,patron_list,object_list,patron_exit_list):
                     ride.set_animated(False)
                     ride_max = ride.get_limit()
                     for _ in range(ride_max):
-                        #put the patrons back into the world map
+                        # put the patrons back into the world map
                         passenger = ride.remove_passenger()
                         ride_choice = random.choice(ride_list)
                         passenger.insert_ride(ride_choice)
@@ -309,9 +327,9 @@ def simulate(ride_list,patron_list,object_list,patron_exit_list):
                     
             ride_queue = ride.get_queue()    
             for patrons in ride_queue:
-                #plot patrons inside the queue
+                # plot patrons inside the queue
                 patrons.plot_me(plt)
-        if i >= night:
+        if i >= night: # Once it reaches night time start moving every people into an exit list
             for person in patron_list:
                 patron_exit_list.append(person)
                 patron_list.remove(person)
@@ -323,18 +341,19 @@ def simulate(ride_list,patron_list,object_list,patron_exit_list):
                     ride_queue.remove(person)
                     person.reached_destination()
         for person in patron_list:
-            #plot patrons inside the world map
+            # plot patrons inside the world map
             person.plot_me(plt)
             if person.get_destination():
-                #update the person's position if they havent reached their ride/destination
+                # update the person's position if they havent reached their ride/destination
                 person.step_change(object_list)
             if person.get_destination() == False:
-                #insert the person into their relevant ride queue if they have reached their destination
+                # insert the person into their relevant ride queue if they have reached their destination
                 person_ride = person.get_ride()
                 person_ride.insert_queue(person)
                 patron_list.remove(person)
         for person in patron_exit_list:
             if person.get_exit():
+                # Stop plotting the person once they reach the exit (remove them from the list)
                 patron_exit_list.remove(person)
             else:
                 person.plot_me(plt)
@@ -346,7 +365,6 @@ def simulate(ride_list,patron_list,object_list,patron_exit_list):
     sys.exit()
 
 if __name__ == "__main__":
-    random.seed(1)
     main()
 
 
