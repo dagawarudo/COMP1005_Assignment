@@ -11,18 +11,30 @@ class Ride():
         self.animating = False
 
     def is_collides(self, x,y,margin = 5):
-        # Compares the coordinates of an object and rides and checks if the object would be inside the ride 
+        """
+        Compares the coordinates of an object and rides and checks if the object would be inside the ride 
+        """
+        
         return (self.xpos - margin < x < self.xpos + self.width +margin) and (self.ypos -margin < y < self.ypos + self.height+margin)
 
     def insert_person(self, person):
-        #Insert person into the ride
+        """
+        Insert the person in their ride 
+        """
+        
         self.passengers.append(person)
 
     def ride_full(self):
+        """
+        Checks if ride is full
+        """
         #If the ride queue is full return True else return False
         return len(self.queue) >= self.ride_limit
     
     def insert_queue(self, person):
+        """
+        Insert the person in the ride's queue  
+        """
         #Insert person into the queue
         self.queue.append(person)
         position = len(self.queue) # Get position of the queue 
@@ -30,19 +42,33 @@ class Ride():
         person.xpos = self.xpos -4
         person.ypos = self.ypos + position*2
     def remove_queue(self):
+        """
+        Removes person from a queue 
+        """
         #Return top most person inside 
         return self.queue.pop(0)
     def remove_passenger(self):
+        """
+        Removes a person from their ride 
+        """
         #remove and return a  person from their  ride
         return self.passengers.pop(0)
     def get_target(self):
+        """
+        get coordinates 
+        """
         #return coordinates 
         return self.xpos-2,self.ypos-2
     def get_exit(self):
+        """
+        return exit coordinates
+        """
         #return exit coordinates 
         return self.xpos + self.width, self.ypos + self.height
     def get_limit(self):
-        #return ride limit 
+        """
+        return ride limit 
+        """
         return self.ride_limit
     def get_queue(self):
         #return queue
