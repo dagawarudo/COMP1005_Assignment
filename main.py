@@ -185,10 +185,13 @@ def batch_mode(arguments):
     patron_exit_list = []
     csv_list = []
     file_name = arguments[2]
-    with open(file_name) as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"],"merry_no":row["merry_no"],"weather" : row["weather"]})
+    try:
+        with open(file_name) as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"],"merry_no":row["merry_no"],"weather" : row["weather"]})
+    except FileNotFoundError:
+        sys.exit("Please input the correct file name")
     
     balloon_no = csv_list[0]["balloon_no"].strip()
     wheel_no = csv_list[0]["wheel_no"].strip()
