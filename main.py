@@ -147,12 +147,15 @@ def interactive_mode():
 
     simulate(ride_list,patron_list,object_list,patron_exit_list,weather,img)
 def get_image(weather):
+    """
+    Return the image based on the scenario 
+    """
     if weather == "A":
         img = pimg.imread("autumn.png")
     elif weather == "W":
         img = pimg.imread("winter.png")
     else:
-        img = pimg.imread("background.png")
+        img = pimg.imread("background.png") #Default/normal
     return img[::-1] #Make the image reverse 
 def assign_patron_list(patron_list,no_of_people,ride_list):
     for _ in range(no_of_people):

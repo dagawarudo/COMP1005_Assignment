@@ -5,15 +5,6 @@ class MerryGoRound(Ride):
     def __init__(self, xpos, ypos,width, height,cubicles):
         super().__init__(xpos,ypos,width,height)
         self.cubicles = cubicles
-
-        #Original frame coordinates
-        frame_x =np.array([1,3,5,4,2])
-        frame_y =np.array([1,5,1,3,3])
-
-        #Transformed frame coordinates
-        self.transform_frame_x = (frame_x - 1)/4 * width + xpos
-        self.transform_frame_y = (frame_y - 1)/4 * height  + ypos
-
         self.cubicles_list = []
 #TODO IMPROVE THE COORDINATES
         self.x = self.xpos + self.width
