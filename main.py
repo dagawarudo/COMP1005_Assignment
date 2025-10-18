@@ -11,6 +11,7 @@ from HotAirBalloon import HotAirBalloon as Balloon
 from FerrisWheel import FerrisWheel as Wheel
 from Person import Person
 from Ride import Ride
+from MerryGoRound import MerryGoRound as Merry
 import sys
 import matplotlib.pyplot as plt
 import random  
@@ -48,13 +49,13 @@ def get_int(text, less, greater):
         else:
             return n 
         
-def get_ride(ride_options, ride_input):
+def get_ride(ride_options, ride_input,ride_number):
     """
     Function is used to get rides from the user.
     """
     ride = None
     while ride is None:
-        ride = input(f"Select your rides by typing the relevant letters \n{ride_options} ")
+        ride = input(f"Select your rides by typing the relevant letters for ride {ride_number+1} \n{ride_options} ")
         # Save position info easily 
         xpos = ride_input[0]
         ypos = ride_input [1]
@@ -78,6 +79,9 @@ def get_ride(ride_options, ride_input):
                 print("Input color of the frame ")
                 frame_color = get_color()
                 return Pirate(xpos,ypos,width,height,ship_color,frame_color)
+            case "M":
+                horses = get_int("Input the number of horses (minimum 4 maximum 8) ", 4, 8)
+                return Merry(xpos, ypos,width,height,horses)
             case _:
                 ride = None 
                 print("Please follow the relevant instructions ")
@@ -98,9 +102,10 @@ def interactive_mode():
     no_of_rides = get_int("How many rides would you like (a minimum of 2  and a maximum of 6 rides) ",2,6)
     ride_options = "\nHot Air Balloon     -   B\n" \
         "Ferris Wheel   -   W\n" \
-        "Pirate Ship    -   P\n"
+        "Pirate Ship    -   P\n" \
+        "Merry Go Round -   M\n"
     for i in range(no_of_rides):
-        ride = get_ride(ride_options, positions[i])
+        ride = get_ride(ride_options, positions[i],i)
         ride_list.append(ride) # Append each ride to a list 
     
     no_of_people = get_int("How many people would you like (a minimum of 20 and a maximum of 60 people) ",20,60)
@@ -153,26 +158,28 @@ def batch_mode(arguments):
     with open(file_name) as file:
         reader = csv.DictReader(file)
         for row in reader:
-            csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"]})
+            csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"],"merry_no":row["merry_no"]})
     
     balloon_no = csv_list[0]["balloon_no"]
     wheel_no = csv_list[0]["wheel_no"]
     pirate_no = csv_list[0]["pirate_no"]
+    merry_no = csv_list[0]["merry_no"]
     person_no = csv_list[0]["person_no"]
 
     # Ensure all of them are integers 
     balloon_no = validate_int(balloon_no, "balloon_no")
     wheel_no = validate_int(wheel_no,"wheel_no")
     pirate_no = validate_int(pirate_no, "pirate_no")
+    merry_no = validate_int(merry_no,"merry_no")
     person_no = validate_int(person_no, "person_n")
 
-    no_of_rides = balloon_no + wheel_no +pirate_no
+    no_of_rides = balloon_no + wheel_no +pirate_no + merry_no
     if no_of_rides > 6 or no_of_rides < 2:
         sys.exit("Please ensure that their is a minimum number of 2 rides and a maximum of 6 rides.")
     if person_no > 60 or person_no < 20:
         sys.exit("Please ensure that the maximum number of people is 60 and the minimum number is 20.")
 
-    balloon_count =  wheel_count = pirate_count = 0
+    balloon_count =  wheel_count = pirate_count = merry_count = 0
 
     # Input details for each ride 
     for i in range(no_of_rides):
@@ -202,6 +209,10 @@ def batch_mode(arguments):
             pirate = Pirate(xpos,ypos,width,height,ship_color,frame_color)
             ride_list.append(pirate)
             pirate_count += 1
+        elif merry_count < merry_no:
+            horse = random.choice([4,5,6,7,8])
+            merry = Merry(xpos,ypos,width,height,horse)
+            ride_list.append(merry)
     
     # Get object details and append to a list 
     for i in range(len(object_positions)):

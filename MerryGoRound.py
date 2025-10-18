@@ -1,14 +1,9 @@
 from Cubicle import Cubicle
+from Ride import Ride
 import numpy as np
-import random
-class FerrisWheel():
-    def __init__(self, xpos, ypos,width, height,cubicles ,cubicle_color="red", frame_color="black"):
-        self.xpos = xpos
-        self.ypos = ypos
-        self.width = width
-        self.height = height
-        self.cubicle_color = cubicle_color
-        self.frame_color = frame_color
+class MerryGoRound(Ride):
+    def __init__(self, xpos, ypos,width, height,cubicles):
+        super().__init__(xpos,ypos,width,height)
         self.cubicles = cubicles
 
         #Original frame coordinates
@@ -21,26 +16,25 @@ class FerrisWheel():
 
         self.cubicles_list = []
 #TODO IMPROVE THE COORDINATES
-        x = self.xpos + self.width
-        y = self.ypos + self.height
+        self.x = self.xpos + self.width
+        self.y = self.ypos + self.height
+        
+        # Coordinates for the wheel/circle
+        self.center_x = (self.x + self.xpos)/2
+        self.center_y = (self.y + self.ypos)/2
 
-        center_x = (x+self.xpos)/2
-        center_y = (y+self.ypos)/2
-        radius = (x - center_x)
-
-        self.center_x =center_x
-        self.center_y = center_y
+        self.radius = (self.x - self.center_x) #Radius 
 
         cubicle_size = 4
-        color_list = ["red","blue","yellow", "green","orange"]
+        color_list = ["red","blue","yellow", "green","orange","pink","purple","cyan"]
 
-        for i  in range(self.cubicles):
-            cubicle_angle = 2 *np.pi *i/cubicles
+        for i  in range(self.cubicles): # To plot each cubicle in thr wheel
+            cubicle_angle = 2 *np.pi *i/cubicles #To divide the cubicles evenly in the wheel
 
-            cubicle_x = center_x + radius *np.cos(cubicle_angle)
-            cubicle_y = center_y + radius * np.sin(cubicle_angle)
+            cubicle_x = self.center_x + self.radius *np.cos(cubicle_angle)
+            cubicle_y = self.center_y + self.radius * np.sin(cubicle_angle)
 
-            cubicle_color = random.choice(color_list)
+            cubicle_color = color_list[i]
 
             cubicle = Cubicle(cubicle_x, cubicle_y,cubicle_angle,cubicle_size,cubicle_color)
 
@@ -48,32 +42,26 @@ class FerrisWheel():
 
         
     def plot_me(self, p):
-        x = self.xpos + self.width
-        y = self.ypos + self.height
-
-        center_x = (x+self.xpos)/2
-        center_y = (y+self.ypos)/2
-        radius = (x - center_x)  
+        #plot the Merry Go Roundd
 
         #plotting the figure
-        p.plot([self.xpos, x, x, self.xpos, self.xpos],[self.ypos, self.ypos,y, y,self.ypos]) # box
-        p.plot(self.transform_frame_x, self.transform_frame_y, self.frame_color) #frame
-        circle = p.Circle((center_x, center_y), radius, color="black", fill=False,linewidth = 3)
+        p.plot([self.xpos, self.x, self.x, self.xpos, self.xpos],[self.ypos, self.ypos,self.y, self.y,self.ypos]) # box
+        circle = p.Circle((self.center_x, self.center_y), self.radius, color="black", fill=False,linewidth  = 2) # Wheel
         ax = p.gca()
         ax.add_patch(circle)
 
         # SOURCE FOR CIRCLE PLOTTING : https://stackoverflow.com/a/9216646
 
-        #plotting cubicles of the ferris wheel
+        #plotting cubicles of the Merry go round
         for cubicle  in self.cubicles_list:
             cubicle_x = cubicle.transform_x
             cubicle_y = cubicle.transform_y
             cubicle_size = cubicle.size
             cubicle_color = cubicle.color
-            cubicle_plot = p.plot(cubicle_x, cubicle_y,"o",color = cubicle_color,markersize = cubicle_size)
+            p.plot(cubicle_x, cubicle_y,"^",color = cubicle_color,markersize = cubicle_size * 2)
+
 
     def step_changes(self):
-        #Update animation state
         
         #Coordinates of the pivet
         a = self.center_x
@@ -98,4 +86,15 @@ class FerrisWheel():
             cubicle.transform_x = rotated_cubicle[0] + a
             cubicle.transform_y = rotated_cubicle[1] + b 
 
-            cubicle.angle += 15 
+            cubicle.angle += 15
+    def reset(self):
+        #return 
+        return
+
+
+
+
+
+
+
+
