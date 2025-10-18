@@ -40,7 +40,7 @@ def get_int(text, less, greater):
     n = None 
     while n is None:
         try:
-            n = int(input(text))
+            n = int(input(text).strip())
             if n < less or n > greater:
                 n = None 
                 raise ValueError
@@ -86,19 +86,36 @@ def get_ride(ride_options, ride_input,ride_number):
                 ride = None 
                 print("Please follow the relevant instructions ")
 
-
+def get_scenario(text):
+    weather = None
+    weather_options = "Normal\t-\tN\n" \
+    "Winter\t-\tW\n" \
+    "Autumn-\t-\tA\n"
+    weather_text = f"Select your weather by typing the relevent letters\n {weather_options}"
+    while weather is None:
+        weather = input(weather_text)
+        match weather.upper():
+            case "N":
+                return "N"
+            case "A":
+                return "A"
+            case "W":
+                return "W"
+            case _:
+                weather = None
+                print("Please follow the relevant instructions.")
+        
 def interactive_mode():
     """
     Interactive mode which allows the user to put their inputs to simulate the rides 
     """
-    color_list = ["red","blue","yellow", "green","orange","purple","gold","lightblue","pink","cyan"]
     positions = [[25+1,200,50,50],[150+2,210,50,50],[300,200,50,50],[25+1,50,50,50],[150+2,30,50,50],[300,50,50,50]]
     object_positions = [[150,110,100,80]]
     ride_list = []
     patron_list = []
     object_list = []
     patron_exit_list = []
-    
+    weather = get_scenario("What is your scenario")
     no_of_rides = get_int("How many rides would you like (a minimum of 2  and a maximum of 6 rides) ",2,6)
     ride_options = "\nHot Air Balloon     -   B\n" \
         "Ferris Wheel   -   W\n" \
@@ -125,8 +142,18 @@ def interactive_mode():
 
     patron_list = assign_patron_list(patron_list,no_of_people,ride_list)
 
-    simulate(ride_list,patron_list,object_list,patron_exit_list)
+    img = get_image(weather)
 
+
+    simulate(ride_list,patron_list,object_list,patron_exit_list,weather,img)
+def get_image(weather):
+    if weather == "A":
+        img = pimg.imread("autumn.png")
+    elif weather == "W":
+        img = pimg.imread("winter.png")
+    else:
+        img = pimg.imread("background.png")
+    return img[::-1] #Make the image reverse 
 def assign_patron_list(patron_list,no_of_people,ride_list):
     for _ in range(no_of_people):
         # Assign initial inputs to people
@@ -158,13 +185,17 @@ def batch_mode(arguments):
     with open(file_name) as file:
         reader = csv.DictReader(file)
         for row in reader:
-            csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"],"merry_no":row["merry_no"]})
+            csv_list.append({"balloon_no": row["balloon_no"],"wheel_no" : row["wheel_no"],"pirate_no": row["pirate_no"],"person_no" : row["person_no"],"merry_no":row["merry_no"],"weather" : row["weather"]})
     
-    balloon_no = csv_list[0]["balloon_no"]
-    wheel_no = csv_list[0]["wheel_no"]
-    pirate_no = csv_list[0]["pirate_no"]
-    merry_no = csv_list[0]["merry_no"]
-    person_no = csv_list[0]["person_no"]
+    balloon_no = csv_list[0]["balloon_no"].strip()
+    wheel_no = csv_list[0]["wheel_no"].strip()
+    pirate_no = csv_list[0]["pirate_no"].strip()
+    merry_no = csv_list[0]["merry_no"].strip()
+    person_no = csv_list[0]["person_no"].strip()
+    weather = csv_list[0]["weather"]
+    weather = weather.strip().upper()
+
+    img = get_image(weather)
 
     # Ensure all of them are integers 
     balloon_no = validate_int(balloon_no, "balloon_no")
@@ -231,7 +262,7 @@ def batch_mode(arguments):
 
 
     patron_list = assign_patron_list(patron_list,person_no,ride_list)
-    simulate(ride_list,patron_list,object_list,patron_exit_list)
+    simulate(ride_list,patron_list,object_list,patron_exit_list,weather,img)
 
     print("Batch mode")
     sys.exit()
@@ -244,20 +275,18 @@ def validate_int(number, variable):
         return int(number)
     except ValueError:
         sys.exit(f"Please ensure that '{variable}' is an integer")
-def plot_area(i,noon,night):
+def plot_area(i,noon,night,img,weather):
     """
     Used to plot the terrain.
     """
     #object_positions = [[150,110,90,70]]
     ax = plt.gca()
-    img = pimg.imread("background.png")
-    img = img[::-1]
     plt.xlim(0,400)
     plt.ylim(0,300)
     plt.title(f"Showground, Timestep {i}")
     if i >= night:
         ax.add_patch(patches.Rectangle((0, 0), 400, 300, facecolor='black', alpha=0.4))
-    elif i >= noon:
+    elif i >= noon and weather != "W":
         ax.add_patch(patches.Rectangle((0, 0), 400, 300, facecolor='yellow', alpha=0.2))
     plt.imshow(img, origin="upper")
 
@@ -297,17 +326,19 @@ def get_color():
         case _:
             return "pink"
     
-def simulate(ride_list,patron_list,object_list,patron_exit_list):
+def simulate(ride_list,patron_list,object_list,patron_exit_list,weather,img):
     """
     Simulate and plot the rides and people 
     """
     n = 100
+    if weather == "W":
+        n = 75
     noon = n/2
     night = 3 *n/4
     exit_pos = [400,150] # Exit coordinates 
     plt.ion()
     for i in range(n): # Simulation 
-        plot_area(i,noon,night) # plot the terrain
+        plot_area(i,noon,night,img,weather) # plot the terrain
         for ride in ride_list: # plot the rides 
             ride.plot_me(plt)
             if ride.ride_full() and ride.is_animated() == False: # If the queue is full and the ride isnt animated
